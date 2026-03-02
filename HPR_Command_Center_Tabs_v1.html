@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+<title>HPR Command Center</title>
+<style>
+:root{--panel:#fff;--ink:#101828;--muted:#667085;--line:#eaecf0;--blue:#1146b8;--blue2:#0b3b9e;--orange:#ff7a1a;--green:#16a34a;--red:#dc2626;--amber:#f59e0b;--shadow:0 12px 28px rgba(16,24,40,.10);--radius:18px}
+*{box-sizing:border-box}
+body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;background:#f3f4f6;color:var(--ink)}
+.top{background:linear-gradient(180deg,var(--blue2),var(--blue));color:#fff;padding:18px 16px 14px;position:sticky;top:0;z-index:20;box-shadow:0 8px 24px rgba(0,0,0,.12)}
+.title{font-size:22px;font-weight:800;letter-spacing:.2px}
+.subtitle{margin-top:6px;font-size:13px;color:rgba(255,255,255,.86);line-height:1.25}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.pill{display:inline-flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:999px;backdrop-filter:blur(6px);min-width:170px}
+.pill b{font-size:14px}
+.pill span{font-variant-numeric:tabular-nums;font-weight:700}
+.langBtn{margin-left:auto;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.12);color:#fff;padding:10px 12px;border-radius:999px;font-weight:800;cursor:pointer}
+.tabs{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+.tab{flex:1 1 220px;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);color:#fff;font-weight:800;cursor:pointer;text-align:center;user-select:none}
+.tab.active{background:#fff;color:var(--blue2);border-color:#fff}
+.wrap{max-width:980px;margin:14px auto 40px;padding:0 12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px;margin-top:12px}
+.card h2{margin:0 0 10px 0;font-size:14px;letter-spacing:.14em;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:720px){.grid{grid-template-columns:1fr}.tab{flex:1 1 auto}}
+.field{display:flex;flex-direction:column;gap:6px}
+label{font-size:12px;color:var(--muted);font-weight:800}
+input,select,textarea{width:100%;padding:12px 12px;border-radius:14px;border:1px solid var(--line);background:#fff;font-size:16px;outline:none}
+textarea{min-height:52px;resize:vertical}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 14px;border-radius:14px;border:1px solid var(--blue);background:var(--blue);color:#fff;font-weight:900;cursor:pointer}
+.btn.secondary{background:#fff;color:var(--blue2);border-color:#c7d2fe}
+.btn.orange{background:var(--orange);border-color:var(--orange);color:#111827}
+.btnRow{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.lineButtons{display:flex;gap:10px;flex-wrap:wrap}
+.lbtn{border:1px solid #d0d5dd;background:#fff;padding:10px 12px;border-radius:999px;font-weight:900;cursor:pointer;min-width:110px}
+.lbtn.active{border-color:var(--blue);box-shadow:0 0 0 3px rgba(17,70,184,.15)}
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:720px){.tiles{grid-template-columns:1fr}}
+.tile{border:1px solid var(--line);border-radius:18px;padding:12px;background:#fff}
+.tile .k{font-size:12px;color:var(--muted);font-weight:900}
+.tile .v{font-size:38px;font-weight:900;letter-spacing:-.02em;margin-top:6px}
+.tile .s{font-size:13px;color:var(--muted);margin-top:4px;line-height:1.25}
+.v.med{font-size:34px}
+.v.good{color:var(--green)}
+.v.bad{color:var(--red)}
+.v.warn{color:var(--amber)}
+.banner{border:1px solid #ffe7d1;background:#fff7ed;border-radius:18px;padding:12px}
+.banner h3{margin:0;font-size:14px;color:#9a3412;letter-spacing:.08em}
+.banner .big{margin-top:6px;font-weight:950;font-size:34px;letter-spacing:-.02em}
+.banner p{margin:6px 0 0 0;color:#7c2d12;font-size:13px;line-height:1.3}
+.hint{font-size:12px;color:var(--muted);line-height:1.25}
+.teamsBox{border:1px dashed #cbd5e1;background:#f8fafc;border-radius:16px;padding:12px;white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;font-size:12px;color:#0f172a}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{border:1px solid #e5e7eb;padding:6px;vertical-align:top}
+th{background:#f8fafc;text-align:left;font-weight:900;color:#334155}
+.hc{font-weight:900}
+.note{font-size:11px;color:#475569}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="title">HPR Command Center</div>
+  <div class="subtitle" data-i18n="top_sub">Capacity-based coaching. Ask: “Where do you expect to be?” then “What’s the recovery?”</div>
+  <div class="row">
+    <div class="pill"><b data-i18n="now">Now</b><span id="nowClock">--:--</span></div>
+    <button class="langBtn" id="langBtn">ES</button>
+  </div>
+  <div class="tabs">
+    <div class="tab active" data-tab="tab-hour" data-i18n="tab_hour">Run the Hour</div>
+    <div class="tab" data-tab="tab-red" data-i18n="tab_red">Respond to Red</div>
+    <div class="tab" data-tab="tab-plan" data-i18n="tab_plan">Own Tomorrow</div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="card">
+    <h2 data-i18n="line_section">LINE</h2>
+    <div class="btnRow">
+      <div class="lineButtons" id="lineButtons"></div>
+      <div style="flex:1"></div>
+      <div class="field" style="min-width:240px">
+        <label data-i18n="shift">Shift</label>
+        <select id="shiftSel">
+          <option value="day">Day Shift (06:00–14:30)</option>
+          <option value="pic1">Pictures 1st Shift (06:00–14:30)</option>
+          <option value="pic2">Pictures 2nd Shift (15:30–24:00)</option>
+        </select>
+      </div>
+      <div class="field" style="min-width:200px">
+        <label data-i18n="extra_break">Extra 10-min break on 10-hr day</label>
+        <select id="extraBreakSel">
+          <option value="on" selected>ON</option>
+          <option value="off">OFF</option>
+        </select>
+      </div>
+    </div>
+    <div class="hint" style="margin-top:8px" data-i18n="line_hint">Pick the line first. Capacity & takt auto-load. Breaks/lunch are line-specific.</div>
+  </div>
+
+  <div id="tab-hour" class="tabPane">
+    <div class="card">
+      <h2 data-i18n="hour_inputs">HOURLY INPUTS</h2>
+      <div class="grid">
+        <div class="field">
+          <label data-i18n="hour_units">Units this hour (so far)</label>
+          <input id="hourUnits" type="number" min="0" step="1" value="0"/>
+          <div class="hint" data-i18n="hour_units_hint">Enter units completed so far in the current hour. Tool checks minute-by-minute pace.</div>
+        </div>
+        <div class="field">
+          <label data-i18n="force_refresh">Refresh</label>
+          <button class="btn" id="hourUpdateBtn" data-i18n="update">Update</button>
+          <div class="hint" data-i18n="update_hint">Updates live as you type. Button forces a refresh.</div>
+        </div>
+      </div>
+
+      <div class="tiles" style="margin-top:10px">
+        <div class="tile">
+          <div class="k" data-i18n="hour_window">Current Hour Window</div>
+          <div class="v med" id="hourWindow">--</div>
+          <div class="s" id="hourAvail">--</div>
+        </div>
+        <div class="tile">
+          <div class="k" data-i18n="expected_by_now">Expected by now</div>
+          <div class="v" id="hourExpectedNow">—</div>
+          <div class="s" id="hourExpectedNote">—</div>
+        </div>
+        <div class="tile">
+          <div class="k" data-i18n="gap_now">Gap now (units)</div>
+          <div class="v" id="hourGap">—</div>
+          <div class="s" data-i18n="gap_sign">Negative = behind. Positive = ahead.</div>
+        </div>
+        <div class="tile">
+          <div class="k" data-i18n="need_by_top">Need by top of hour</div>
+          <div class="v" id="hourNeedTop">—</div>
+          <div class="s" id="hourNeedNote">—</div>
+        </div>
+      </div>
+
+      <div class="banner" style="margin-top:10px">
+        <h3 data-i18n="hour_status">HOUR STATUS</h3>
+        <div class="big" id="hourStatusText">—</div>
+        <p id="hourStatusDetail">—</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="tab-red" class="tabPane hidden">
+    <div class="card">
+      <h2 data-i18n="red_inputs">DAY INPUTS (for recovery)</h2>
+      <div class="grid">
+        <div class="field"><label data-i18n="sched_units">Today’s schedule (units)</label><input id="daySchedule" type="number" min="0" step="1" value="0"/></div>
+        <div class="field"><label data-i18n="carryover_units">Carryover (units)</label><input id="dayCarry" type="number" min="0" step="1" value="0"/></div>
+        <div class="field"><label data-i18n="produced_to_now">Total produced to now (today)</label><input id="dayProducedNow" type="number" min="0" step="1" value="0"/><div class="hint" data-i18n="produced_to_now_hint">For Px/SL and Pictures, enter cumulative day total.</div></div>
+        <div class="field"><label data-i18n="last_hour_actual">Last hour actual (units)</label><input id="lastHourActual" type="number" min="0" step="1" value="0"/></div>
+      </div>
+      <div class="btnRow" style="margin-top:10px">
+        <button class="btn" id="redUpdateBtn" data-i18n="update">Update</button>
+        <span class="hint" data-i18n="red_hint">Uses capacity-based expected-to-now (breaks excluded) + last hour vs target.</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="day_status">DAY STATUS</h2>
+      <div class="tiles">
+        <div class="tile"><div class="k" data-i18n="capacity">Capacity (units)</div><div class="v" id="capTile">—</div><div class="s" data-i18n="cap_note">Measured against 455 min available.</div></div>
+        <div class="tile"><div class="k" data-i18n="takt">Takt (sec/unit)</div><div class="v" id="taktTile">—</div><div class="s" id="ctTile">—</div></div>
+        <div class="tile"><div class="k" data-i18n="expected_day_now">Expected-to-now (day @100%)</div><div class="v" id="expNowTile">—</div><div class="s" id="expNowNote">—</div></div>
+        <div class="tile"><div class="k" data-i18n="hpr_day">Current HPR% (DAY)</div><div class="v" id="hprDayTile">—</div><div class="s" id="hprDayNote">—</div></div>
+        <div class="tile"><div class="k" data-i18n="gap_to_100">Gap to 100% HPR now (units)</div><div class="v" id="gap100Tile">—</div><div class="s" data-i18n="gap100_note">Produced - Expected-to-now.</div></div>
+        <div class="tile"><div class="k" data-i18n="need_100">Need ±/hr to hit 100% HPR</div><div class="v" id="need100Tile">—</div><div class="s" id="need100Note">—</div></div>
+      </div>
+
+      <div class="banner" style="margin-top:10px">
+        <h3 data-i18n="last_hour_title">LAST HOUR</h3>
+        <div class="big" id="lastHourSummary">—</div>
+        <p id="lastHourDetail">—</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="recovery">RECOVERY (next 60 minutes)</h2>
+      <div class="hint" data-i18n="recovery_hint">Pick the play(s) you will run. This builds the Teams post.</div>
+      <div class="btnRow" style="margin-top:10px;flex-wrap:wrap">
+        <button class="btn secondary play" data-play="Build/Move SWIP" data-i18n="p_swip">Build/Move SWIP</button>
+        <button class="btn secondary play" data-play="Send 10-min Helper" data-i18n="p_helper">Send 10-min Helper</button>
+        <button class="btn secondary play" data-play="Rebalance Stations" data-i18n="p_rebalance">Rebalance Stations</button>
+        <button class="btn secondary play" data-play="Protect Work Sequence" data-i18n="p_sequence">Protect Work Sequence</button>
+        <button class="btn secondary play" data-play="Protect Quality Points" data-i18n="p_quality">Protect Quality Points</button>
+        <button class="btn secondary play" data-play="Protect Constraint" data-i18n="p_constraint">Protect Constraint</button>
+        <button class="btn secondary play" data-play="Escalate Now (Andon)" data-i18n="p_andon">Escalate Now (Andon)</button>
+      </div>
+      <div class="grid" style="margin-top:10px">
+        <div class="field">
+          <label data-i18n="detail_optional">Add detail (optional)</label>
+          <textarea id="playDetail" placeholder="Ex: Build SWIP at Frame; send helper to Sash; protect welder output."></textarea>
+          <div class="hint" id="playSelected">Selected: —</div>
+        </div>
+        <div class="field">
+          <label data-i18n="teams">Teams</label>
+          <button class="btn" id="copyTeamsBtn" data-i18n="copy_teams">Copy Teams Update</button>
+          <div class="hint" data-i18n="copy_hint">Creates a clean paste for Teams.</div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:10px">
+        <h2 data-i18n="teams_preview">TEAMS MESSAGE PREVIEW</h2>
+        <div class="teamsBox" id="teamsPreview">—</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="tab-plan" class="tabPane hidden">
+    <div class="card">
+      <h2 data-i18n="plan_inputs">END-OF-SHIFT PLAN (carryover first)</h2>
+      <div class="grid">
+        <div class="field"><label data-i18n="plan_carry">Carryover to clear first (units)</label><input id="planCarry" type="number" min="0" step="1" value="0"/></div>
+        <div class="field"><label data-i18n="plan_upload">Upload schedule (.txt)</label><input id="schedFile" type="file" accept=".txt,text/plain"/><div class="hint" data-i18n="plan_upload_hint">Upload the same text export you used for the PDF route plan.</div></div>
+      </div>
+      <div class="btnRow" style="margin-top:10px">
+        <button class="btn" id="buildPlanBtn" data-i18n="build_plan">Build Plan</button>
+        <button class="btn secondary" id="printPlanBtn" data-i18n="print">Print</button>
+        <span class="hint" id="planStatus">—</span>
+      </div>
+    </div>
+
+    <div class="card" id="planOutCard">
+      <h2 data-i18n="plan_output">PLAN OUTPUT</h2>
+      <div class="tiles">
+        <div class="tile"><div class="k" data-i18n="plan_cap">Capacity pace</div><div class="v med" id="planCap">—</div><div class="s" id="planCapNote">—</div></div>
+        <div class="tile"><div class="k" data-i18n="plan_takt">Takt</div><div class="v med" id="planTakt">—</div><div class="s" id="planTaktNote">—</div></div>
+        <div class="tile"><div class="k" data-i18n="plan_finish">Estimated finish time (capacity pace)</div><div class="v med" id="planFinish">—</div><div class="s" id="planFinishNote">—</div></div>
+        <div class="tile"><div class="k" data-i18n="plan_hc">High-content impact</div><div class="v med" id="planHC">—</div><div class="s" id="planHCNote">—</div></div>
+      </div>
+
+      <div style="margin-top:10px">
+        <div class="note" data-i18n="plan_cols_note">Columns: Batch, Route(s), Qty Needed, Qty Completed, Qty Required, High Content, ETA (time of day), Mull, Temp, Description.</div>
+        <div style="overflow:auto;margin-top:8px">
+          <table id="planTable">
+            <thead><tr>
+              <th data-i18n="c_batch">Batch</th><th data-i18n="c_routes">Route(s)</th><th data-i18n="c_need">Qty Needed</th><th data-i18n="c_done">Qty Completed</th><th data-i18n="c_req">Qty Required</th><th data-i18n="c_hc">High</th><th data-i18n="c_eta">ETA</th><th data-i18n="c_mull">Mull</th><th data-i18n="c_temp">Temp</th><th data-i18n="c_desc">Description</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="hint" style="margin-top:8px" data-i18n="plan_rules_note">Notes: High-content rules: L1 = HOP; L2/L3 = SH (+FF for L2); Px/SL = SL; CX = WW. Mull number implies easier packaging.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const LINES=[{key:'L1',label:'Line 1',cap:260},{key:'L2',label:'Line 2',cap:385},{key:'L3',label:'Line 3',cap:195},{key:'CX',label:'Casement',cap:108},{key:'PXSL',label:'Px/SL',cap:115,perShift:true}];
+const BREAKS={L1:[{s:'09:00',e:'09:15'},{s:'11:45',e:'12:15'}],L2:[{s:'09:10',e:'09:25'},{s:'12:15',e:'12:45'}],L3:[{s:'09:10',e:'09:25'},{s:'12:15',e:'12:45'}],CX:[{s:'08:45',e:'09:00'},{s:'11:15',e:'11:45'}],PXSL:[{s:'09:00',e:'09:15'},{s:'11:45',e:'12:15'}],PIC:[{s:'09:00',e:'09:15'},{s:'11:45',e:'12:15'}]};
+const SHIFTS={day:{start:'06:00',end:'14:30'},pic1:{start:'06:00',end:'14:30'},pic2:{start:'15:30',end:'24:00'}};
+let state={lang:'en',lineKey:'L2',plays:new Set()};
+const I18N={en:{top_sub:'Capacity-based coaching. Ask: “Where do you expect to be?” then “What’s the recovery?”',now:'Now',tab_hour:'Run the Hour',tab_red:'Respond to Red',tab_plan:'Own Tomorrow',line_section:'LINE',shift:'Shift',extra_break:'Extra 10-min break on 10-hr day',line_hint:'Pick the line first. Capacity & takt auto-load. Breaks/lunch are line-specific.',hour_inputs:'HOURLY INPUTS',hour_units:'Units this hour (so far)',hour_units_hint:'Enter units completed so far in the current hour. Tool checks minute-by-minute pace.',force_refresh:'Refresh',update:'Update',update_hint:'Updates live as you type. Button forces a refresh.',hour_window:'Current Hour Window',expected_by_now:'Expected by now',gap_now:'Gap now (units)',gap_sign:'Negative = behind. Positive = ahead.',need_by_top:'Need by top of hour',hour_status:'HOUR STATUS',red_inputs:'DAY INPUTS (for recovery)',sched_units:'Today’s schedule (units)',carryover_units:'Carryover (units)',produced_to_now:'Total produced to now (today)',produced_to_now_hint:'For Px/SL and Pictures, enter cumulative day total.',last_hour_actual:'Last hour actual (units)',red_hint:'Uses capacity-based expected-to-now (breaks excluded) + last hour vs target.',day_status:'DAY STATUS',capacity:'Capacity (units)',cap_note:'Measured against 455 min available.',takt:'Takt (sec/unit)',expected_day_now:'Expected-to-now (day @100%)',hpr_day:'Current HPR% (DAY)',gap_to_100:'Gap to 100% HPR now (units)',gap100_note:'Produced - Expected-to-now.',need_100:'Need ±/hr to hit 100% HPR',last_hour_title:'LAST HOUR',recovery:'RECOVERY (next 60 minutes)',recovery_hint:'Pick the play(s) you will run. This builds the Teams post.',p_swip:'Build/Move SWIP',p_helper:'Send 10-min Helper',p_rebalance:'Rebalance Stations',p_sequence:'Protect Work Sequence',p_quality:'Protect Quality Points',p_constraint:'Protect Constraint',p_andon:'Escalate Now (Andon)',detail_optional:'Add detail (optional)',teams:'Teams',copy_teams:'Copy Teams Update',copy_hint:'Creates a clean paste for Teams.',teams_preview:'TEAMS MESSAGE PREVIEW',plan_inputs:'END-OF-SHIFT PLAN (carryover first)',plan_carry:'Carryover to clear first (units)',plan_upload:'Upload schedule (.txt)',plan_upload_hint:'Upload the same text export you used for the PDF route plan.',build_plan:'Build Plan',print:'Print',plan_output:'PLAN OUTPUT',plan_cap:'Capacity pace',plan_takt:'Takt',plan_finish:'Estimated finish time (capacity pace)',plan_hc:'High-content impact',plan_cols_note:'Columns: Batch, Route(s), Qty Needed, Qty Completed, Qty Required, High Content, ETA (time of day), Mull, Temp, Description.',c_batch:'Batch',c_routes:'Route(s)',c_need:'Qty Needed',c_done:'Qty Completed',c_req:'Qty Required',c_hc:'High',c_eta:'ETA',c_mull:'Mull',c_temp:'Temp',c_desc:'Description',plan_rules_note:'Notes: High-content rules: L1 = HOP; L2/L3 = SH (+FF for L2); Px/SL = SL; CX = WW. Mull number implies easier packaging.'},
+es:{top_sub:'Coaching basado en capacidad. Pregunta: “¿Dónde esperas estar?” y luego “¿Cuál es la recuperación?”',now:'Ahora',tab_hour:'Ganar la Hora',tab_red:'Responder Rojo',tab_plan:'Plan de Mañana',line_section:'LÍNEA',shift:'Turno',extra_break:'Descanso extra de 10 min en día de 10 hrs',line_hint:'Elige la línea primero. Capacidad y takt se cargan. Descansos/almuerzo por línea.',hour_inputs:'ENTRADAS POR HORA',hour_units:'Unidades en esta hora (hasta ahora)',hour_units_hint:'Ingresa lo completado en la hora actual. Revisa el ritmo por minuto.',force_refresh:'Actualizar',update:'Actualizar',update_hint:'Actualiza mientras escribes. El botón fuerza refresco.',hour_window:'Ventana de la hora',expected_by_now:'Esperado a esta hora',gap_now:'Brecha (unid.)',gap_sign:'Negativo = atrás. Positivo = adelante.',need_by_top:'Necesario al cierre de la hora',hour_status:'ESTADO DE LA HORA',red_inputs:'ENTRADAS DEL DÍA (recuperación)',sched_units:'Programa de hoy (unid.)',carryover_units:'Pendiente (unid.)',produced_to_now:'Producido total hasta ahora',produced_to_now_hint:'Para Px/SL y Pictures, ingresa total acumulado del día.',last_hour_actual:'Última hora real (unid.)',red_hint:'Usa esperado-a-ahora (sin descansos) + última hora vs objetivo.',day_status:'ESTADO DEL DÍA',capacity:'Capacidad (unid.)',cap_note:'Medido contra 455 min disponibles.',takt:'Takt (seg/unid)',expected_day_now:'Esperado-a-ahora (día @100%)',hpr_day:'HPR% Actual (DÍA)',gap_to_100:'Brecha a 100% HPR ahora (unid.)',gap100_note:'Producido - Esperado.',need_100:'Necesario ±/hr para 100% HPR',last_hour_title:'ÚLTIMA HORA',recovery:'RECUPERACIÓN (próx. 60 min)',recovery_hint:'Elige la(s) jugada(s). Construye el mensaje de Teams.',p_swip:'Construir/Mover SWIP',p_helper:'Enviar apoyo 10 min',p_rebalance:'Rebalancear estaciones',p_sequence:'Proteger secuencia',p_quality:'Proteger calidad',p_constraint:'Proteger restricción',p_andon:'Escalar ahora (Andon)',detail_optional:'Detalle (opcional)',teams:'Teams',copy_teams:'Copiar Teams',copy_hint:'Crea un texto limpio para pegar en Teams.',teams_preview:'VISTA PREVIA TEAMS',plan_inputs:'PLAN FIN DE TURNO (pendiente primero)',plan_carry:'Pendiente a limpiar primero (unid.)',plan_upload:'Subir programa (.txt)',plan_upload_hint:'Sube el mismo export de texto usado para el PDF.',build_plan:'Generar plan',print:'Imprimir',plan_output:'SALIDA DEL PLAN',plan_cap:'Ritmo capacidad',plan_takt:'Takt',plan_finish:'Hora estimada de fin',plan_hc:'Impacto alta carga',plan_cols_note:'Columnas: Lote, Ruta(s), Cant. Necesaria, Completada, Requerida, Alta, ETA (hora), Mull, Temp, Descripción.',c_batch:'Lote',c_routes:'Ruta(s)',c_need:'Necesaria',c_done:'Completada',c_req:'Requerida',c_hc:'Alta',c_eta:'ETA',c_mull:'Mull',c_temp:'Temp',c_desc:'Descripción',plan_rules_note:'Notas: Reglas alta carga: L1 = HOP; L2/L3 = SH (+FF para L2); Px/SL = SL; CX = WW. Número en Mull = empaque más fácil.'}};
+function pad2(n){return String(n).padStart(2,'0')}
+function fmtTime(d){let h=d.getHours(),m=d.getMinutes();let ap=h>=12?'PM':'AM';h=h%12;if(h===0)h=12;return `${h}:${pad2(m)} ${ap}`}
+function parseHM(hm){const [h,m]=hm.split(':').map(Number);return {h,m}}
+function toDateToday(hm){const d=new Date();const {h,m}=parseHM(hm);d.setHours(h,m,0,0);return d}
+function shiftRange(){const k=document.getElementById('shiftSel').value;const s=SHIFTS[k]||SHIFTS.day;const start=toDateToday(s.start);let end;if(s.end==='24:00'){end=toDateToday('23:59');end=new Date(end.getTime()+60000)}else end=toDateToday(s.end);return {start,end,key:k}}
+function breaksForLine(lineKey,shiftKey){if(shiftKey.startsWith('pic')) return BREAKS.PIC;return BREAKS[lineKey]||BREAKS.L1}
+function overlapMinutes(aStart,aEnd,bStart,bEnd){const s=Math.max(aStart,bStart),e=Math.min(aEnd,bEnd);return Math.max(0,(e-s)/60000)}
+function availableMinutesInRange(rs,re,lineKey,shiftKey,extraOn){let avail=Math.max(0,(re-rs)/60000);for(const b of breaksForLine(lineKey,shiftKey)){const bs=toDateToday(b.s),be=toDateToday(b.e);avail-=overlapMinutes(rs,re,bs,be)}if(extraOn){let bs,be;if(shiftKey==='pic2'){bs=toDateToday('23:00');be=toDateToday('23:10')}else{bs=toDateToday('13:55');be=toDateToday('14:05')}avail-=overlapMinutes(rs,re,bs,be)}return Math.max(0,avail)}
+function getLine(){return LINES.find(x=>x.key===state.lineKey)||LINES[1]}
+function capPerMinute(){return getLine().cap/455}
+function taktSec(){return Math.round((455*60)/getLine().cap)}
+function setLang(lang){state.lang=lang;document.getElementById('langBtn').textContent=(lang==='en')?'ES':'EN';document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.getAttribute('data-i18n');if(I18N[lang]&&I18N[lang][k]) el.textContent=I18N[lang][k]});document.getElementById('playDetail').placeholder=(lang==='en')?'Ex: Build SWIP at Frame; send helper to Sash; protect welder output.':'Ej: Construir SWIP en Frame; enviar apoyo a Sash; proteger salida del welder.';refreshAll()}
+function buildLineButtons(){const wrap=document.getElementById('lineButtons');wrap.innerHTML='';for(const l of LINES){const b=document.createElement('button');b.className='lbtn'+(l.key===state.lineKey?' active':'');b.textContent=l.label;b.onclick=()=>{state.lineKey=l.key;document.querySelectorAll('.lbtn').forEach(x=>x.classList.remove('active'));b.classList.add('active');refreshAll()};wrap.appendChild(b)}}
+function initTabs(){document.querySelectorAll('.tab').forEach(t=>{t.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');const target=t.getAttribute('data-tab');document.querySelectorAll('.tabPane').forEach(p=>p.classList.add('hidden'));document.getElementById(target).classList.remove('hidden');refreshAll()})})}
+function refreshHour(){const now=new Date();const h1=new Date(now);h1.setMinutes(0,0,0);const h2=new Date(h1);h2.setHours(h1.getHours()+1,0,0,0);document.getElementById('hourWindow').textContent=`${fmtTime(h1)}–${fmtTime(h2)}`;const extraOn=document.getElementById('extraBreakSel').value==='on';const {key:shiftKey}=shiftRange();const elapsedAvail=availableMinutesInRange(h1,now,state.lineKey,shiftKey,extraOn);const hourAvailTotal=availableMinutesInRange(h1,h2,state.lineKey,shiftKey,extraOn);const remAvail=Math.max(0,hourAvailTotal-elapsedAvail);document.getElementById('hourAvail').textContent=(state.lang==='en')?`Avail this hour: ${hourAvailTotal.toFixed(0)} min (elapsed ${elapsedAvail.toFixed(0)}, remaining ${remAvail.toFixed(0)})`:`Disp. en la hora: ${hourAvailTotal.toFixed(0)} min (transc. ${elapsedAvail.toFixed(0)}, restan ${remAvail.toFixed(0)})`;const rate=capPerMinute();const expectedNow=rate*elapsedAvail;const expectedHour=rate*hourAvailTotal;const actual=Number(document.getElementById('hourUnits').value||0);const gap=actual-expectedNow;const needTop=Math.max(0,expectedHour-actual);document.getElementById('hourExpectedNow').textContent=expectedNow.toFixed(1);document.getElementById('hourExpectedNote').textContent=(state.lang==='en')?`Hour target @100%: ${expectedHour.toFixed(1)}`:`Objetivo hora @100%: ${expectedHour.toFixed(1)}`;const gapEl=document.getElementById('hourGap');gapEl.textContent=gap.toFixed(1);gapEl.className='v '+(gap>=0?'good':'bad');document.getElementById('hourNeedTop').textContent=needTop.toFixed(1);document.getElementById('hourNeedNote').textContent=(state.lang==='en')?(remAvail>0?`Need ${(needTop/(remAvail/60)).toFixed(1)}/hr for remainder (~${(needTop/(remAvail/10)).toFixed(1)} per 10 min)`:'No time left in hour.'):(remAvail>0?`Necesitas ${(needTop/(remAvail/60)).toFixed(1)}/hr (~${(needTop/(remAvail/10)).toFixed(1)} cada 10 min)`:'No queda tiempo en la hora.');let big=(state.lang==='en')?'ON TRACK':'EN RITMO';let color='var(--green)';if(gap<-2){big=(state.lang==='en')?'BEHIND':'ATRÁS';color='var(--red)'}else if(gap<0){big=(state.lang==='en')?'SLIGHTLY BEHIND':'LIGERAMENTE ATRÁS';color='var(--amber)'}document.getElementById('hourStatusText').textContent=big;document.getElementById('hourStatusText').style.color=color;document.getElementById('hourStatusDetail').textContent=(state.lang==='en')?`Gap now: ${gap.toFixed(1)} units vs expected-by-now. (Expected ${expectedNow.toFixed(1)}, actual ${actual}).`:`Brecha: ${gap.toFixed(1)} unid. vs esperado-a-ahora. (Esperado ${expectedNow.toFixed(1)}, real ${actual}).`}
+function refreshRed(){const line=getLine();const extraOn=document.getElementById('extraBreakSel').value==='on';const {start,end,key:shiftKey}=shiftRange();const now=new Date();const elapsedAvail=availableMinutesInRange(start,now,state.lineKey,shiftKey,extraOn);const plannedAvail=availableMinutesInRange(start,end,state.lineKey,shiftKey,extraOn);const expectedNow=capPerMinute()*elapsedAvail;const producedNow=Number(document.getElementById('dayProducedNow').value||0);const hprDay=expectedNow>0?(producedNow/expectedNow*100):0;const gapTo100=producedNow-expectedNow;const takt=taktSec();const ct=(producedNow>0&&elapsedAvail>0)?((elapsedAvail*60)/producedNow):null;const capTotal=line.cap;const remAvail=Math.max(0,plannedAvail-elapsedAvail);const reqRateToCap=remAvail>0?(Math.max(0,capTotal-producedNow)/(remAvail/60)):0;const currRate=elapsedAvail>0?(producedNow/(elapsedAvail/60)):0;const deltaRate=reqRateToCap-currRate;const lastActual=Number(document.getElementById('lastHourActual').value||0);const nowH=now.getHours();const lastStart=new Date(now);lastStart.setHours(nowH-1,0,0,0);const lastEnd=new Date(now);lastEnd.setHours(nowH,0,0,0);const lastAvail=availableMinutesInRange(lastStart,lastEnd,state.lineKey,shiftKey,extraOn);const lastTarget=capPerMinute()*lastAvail;const lastLost=lastActual-lastTarget;const lastIsRed=(lastLost<-1);document.getElementById('capTile').textContent=line.perShift?`${line.cap} / shift`:`${line.cap}`;document.getElementById('taktTile').textContent=`${takt}`;document.getElementById('ctTile').textContent=ct?((state.lang==='en')?`Current CT ${ct.toFixed(0)} sec/unit`:`CT actual ${ct.toFixed(0)} seg/unid`):((state.lang==='en')?'Current CT —':'CT actual —');document.getElementById('expNowTile').textContent=expectedNow.toFixed(1);document.getElementById('expNowNote').textContent=(state.lang==='en')?`Avail elapsed ${elapsedAvail.toFixed(0)} min / planned ${plannedAvail.toFixed(0)} min`:`Disp. trans. ${elapsedAvail.toFixed(0)} min / plan ${plannedAvail.toFixed(0)} min`;const hprEl=document.getElementById('hprDayTile');hprEl.textContent=`${hprDay.toFixed(1)}%`;hprEl.className='v '+(hprDay>=100?'good':(hprDay>=95?'warn':'bad'));document.getElementById('hprDayNote').textContent=(state.lang==='en')?`Produced ${producedNow} / Expected ${expectedNow.toFixed(1)}`:`Real ${producedNow} / Esperado ${expectedNow.toFixed(1)}`;const gapEl=document.getElementById('gap100Tile');gapEl.textContent=gapTo100.toFixed(1);gapEl.className='v '+(gapTo100>=0?'good':'bad');const needEl=document.getElementById('need100Tile');const sign=(deltaRate>=0?'+':'');needEl.textContent=`${sign}${deltaRate.toFixed(1)}/hr`;needEl.className='v '+(Math.abs(deltaRate)<=1?'good':(deltaRate<0?'good':'bad'));document.getElementById('need100Note').textContent=(state.lang==='en')?`To end at 100% HPR (capacity). Required now ${reqRateToCap.toFixed(1)}/hr vs current ${currRate.toFixed(1)}/hr.`:`Para cerrar en 100% HPR (capacidad). Requerido ${reqRateToCap.toFixed(1)}/hr vs actual ${currRate.toFixed(1)}/hr.`;document.getElementById('lastHourSummary').textContent=(state.lang==='en')?`${lastIsRed?'RED':'OK'} — Lost ${lastLost.toFixed(1)} units`:`${lastIsRed?'ROJO':'OK'} — Perdió ${lastLost.toFixed(1)} unid.`;document.getElementById('lastHourSummary').style.color=lastIsRed?'var(--red)':'var(--green)';document.getElementById('lastHourDetail').textContent=(state.lang==='en')?`Last hour target ${lastTarget.toFixed(1)} (avail ${lastAvail.toFixed(0)} min). Actual ${lastActual}.`:`Objetivo última hora ${lastTarget.toFixed(1)} (disp. ${lastAvail.toFixed(0)} min). Real ${lastActual}.`;buildTeamsPreview()}
+function buildTeamsPreview(){const line=getLine();const shiftLabel=document.getElementById('shiftSel').selectedOptions[0].textContent;const nowTxt=fmtTime(new Date());const schedule=Number(document.getElementById('daySchedule').value||0);const carry=Number(document.getElementById('dayCarry').value||0);const demand=schedule+carry;const extraOn=document.getElementById('extraBreakSel').value==='on';const {start,end,key:shiftKey}=shiftRange();const now=new Date();const elapsedAvail=availableMinutesInRange(start,now,state.lineKey,shiftKey,extraOn);const producedNow=Number(document.getElementById('dayProducedNow').value||0);const ctMinPerUnit=(producedNow>0&&elapsedAvail>0)?(elapsedAvail/producedNow):null;let finishTxt='—',otNeeded='—',carry0='—',carry1='—',carry2='—';if(ctMinPerUnit){const minsNeeded=demand*ctMinPerUnit;const finish=new Date(start.getTime()+minsNeeded*60000);finishTxt=fmtTime(finish);const end0=end;const end1=new Date(end.getTime()+60*60000);const end2=new Date(end.getTime()+120*60000);otNeeded=(finish>end0)?'YES':'NO';const unitsByEnd0=Math.floor(availableMinutesInRange(start,end0,state.lineKey,shiftKey,extraOn)/ctMinPerUnit);const unitsByEnd1=Math.floor(availableMinutesInRange(start,end1,state.lineKey,shiftKey,extraOn)/ctMinPerUnit);const unitsByEnd2=Math.floor(availableMinutesInRange(start,end2,state.lineKey,shiftKey,extraOn)/ctMinPerUnit);carry0=Math.max(0,demand-unitsByEnd0);carry1=Math.max(0,demand-unitsByEnd1);carry2=Math.max(0,demand-unitsByEnd2)}const plays=Array.from(state.plays);const playText=plays.length?`• ${plays.join('\\n• ')}`:'—';const detail=(document.getElementById('playDetail').value||'').trim();const detailLine=detail?`\\nDetail: ${detail}`:'';const need100=document.getElementById('need100Tile').textContent;const msg=`HPR Update — ${line.label} (${shiftLabel}) — ${nowTxt}\\nDay HPR: ${document.getElementById('hprDayTile').textContent}\\nGap to 100% now: ${document.getElementById('gap100Tile').textContent} units\\nNeed for 100%: ${need100}\\n\\nLast Hour:\\n• ${document.getElementById('lastHourDetail').textContent}\\n\\nDemand:\\n• Schedule: ${schedule}\\n• Carryover: ${carry}\\n• Total Required: ${demand}\\n\\nProjected Finish (DAY pace): ${finishTxt}\\nOT needed: ${otNeeded}\\n• No OT carryover est: ${carry0}\\n• +1 hr OT carryover est: ${carry1}\\n• +2 hr OT carryover est: ${carry2}\\n\\nRecovery (next 60 min):\\n${playText}${detailLine}\\n\\nCommitment: Next check-in at top of next hour`;document.getElementById('teamsPreview').textContent=msg}
+function isHighContent(lineKey,batch,routes,desc){const s=(batch+' '+routes.join(' ')+' '+(desc||'')).toUpperCase();if(lineKey==='L1')return s.includes('HOP');if(lineKey==='L2')return s.includes('SH')||s.includes('FF');if(lineKey==='L3')return s.includes('SH');if(lineKey==='PXSL')return s.includes('SL');if(lineKey==='CX')return s.includes('WW');return false}
+function parseScheduleText(txt){const lines=txt.split(/\\r?\\n/).map(x=>x.trim()).filter(Boolean);const rows=[];for(const ln of lines){const parts=ln.split(/\\s+/);if(parts.length<2)continue;const batch=parts[0];const routes=(ln.match(/\\b(?:RT|TRT)\\d+\\b/gi)||[]).map(x=>x.toUpperCase());let mull=null;const mm=ln.match(/\\bMULL\\b[:=]?\\s*(\\d+)/i);if(mm)mull=Number(mm[1]);const temp=/\\bTEMP\\b|\\bTEMPER\\b/i.test(ln)?'True':'';let need=null,done=null;const q=ln.match(/(\\d+)\\s*\\/\\s*(\\d+)\\s*(\\d+)/);if(q){need=Number(q[2]);done=Number(q[3])}else{const nums=ln.match(/\\b\\d+\\b/g)||[];if(nums.length>=2){need=Number(nums[nums.length-2]);done=Number(nums[nums.length-1])}}if(need===null||done===null)continue;const req=Math.max(0,need-done);let desc=ln.replace(batch,'').trim();routes.forEach(r=>{desc=desc.replace(new RegExp('\\\\b'+r+'\\\\b','g'),'').trim()});desc=desc.replace(/(\\d+)\\s*\\/\\s*(\\d+)\\s*(\\d+)/,'').trim();rows.push({batch,routes,need,done,req,mull,temp,desc})}return rows}
+function escapeHtml(s){return String(s).replace(/[&<>\"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',\"'\":'&#39;'}[m]))}
+function buildPlan(){const file=document.getElementById('schedFile').files[0];const carry=Number(document.getElementById('planCarry').value||0);const status=document.getElementById('planStatus');if(!file){status.textContent=(state.lang==='en')?'Upload a schedule file.':'Sube un archivo de programa.';return}const reader=new FileReader();reader.onload=()=>{try{const txt=String(reader.result||'');const rows=parseScheduleText(txt);const tbody=document.querySelector('#planTable tbody');tbody.innerHTML='';const line=getLine();const {start}=shiftRange();const minsPerUnit=455/line.cap;let cumMin=carry*minsPerUnit;let hcCount=0,hcReq=0,totalReq=carry;rows.forEach(r=>{totalReq+=r.req;const hc=isHighContent(state.lineKey,r.batch,r.routes,r.desc);if(hc){hcCount++;hcReq+=r.req}cumMin+=r.req*minsPerUnit;const eta=new Date(start.getTime()+cumMin*60000);const tr=document.createElement('tr');tr.innerHTML=`<td>${escapeHtml(r.batch)}</td><td>${escapeHtml(r.routes.join(', '))}</td><td>${r.need}</td><td>${r.done}</td><td>${r.req}</td><td class="${hc?'hc':''}">${hc?'YES':''}</td><td>${fmtTime(eta)}</td><td>${(r.mull===null||Number.isNaN(r.mull))?'':r.mull}</td><td>${r.temp||''}</td><td>${escapeHtml(r.desc||'')}</td>`;tbody.appendChild(tr)});document.getElementById('planCap').textContent=line.perShift?`${line.cap} / shift`:`${line.cap}`;document.getElementById('planCapNote').textContent=(state.lang==='en')?`Takt pace = ${line.cap} units in 455 min`:`Ritmo = ${line.cap} unid. en 455 min`;document.getElementById('planTakt').textContent=`${Math.round(minsPerUnit*60)} sec/unit`;document.getElementById('planTaktNote').textContent=(state.lang==='en')?`Includes carryover first (${carry})`:`Incluye pendiente primero (${carry})`;const finish=new Date(start.getTime()+(totalReq*minsPerUnit)*60000);document.getElementById('planFinish').textContent=fmtTime(finish);document.getElementById('planFinishNote').textContent=(state.lang==='en')?`Total required: ${totalReq} (schedule req + carryover)`:`Total requerido: ${totalReq}`;document.getElementById('planHC').textContent=`${hcReq}`;document.getElementById('planHCNote').textContent=(state.lang==='en')?`High-content jobs: ${hcCount} (required units)`:`Trabajos alta carga: ${hcCount} (unid. requeridas)`;status.textContent=(state.lang==='en')?`Plan built: ${rows.length} rows.`:`Plan generado: ${rows.length} filas.`}catch(e){status.textContent=(state.lang==='en')?'Could not parse file.':'No se pudo leer el archivo.';console.error(e)}};reader.readAsText(file)}
+function refreshAll(){refreshHour();if(!document.getElementById('tab-red').classList.contains('hidden'))refreshRed()}
+function tickClock(){document.getElementById('nowClock').textContent=fmtTime(new Date());refreshAll()}
+document.getElementById('langBtn').addEventListener('click',()=>setLang(state.lang==='en'?'es':'en'));
+document.getElementById('shiftSel').addEventListener('change',refreshAll);
+document.getElementById('extraBreakSel').addEventListener('change',refreshAll);
+document.getElementById('hourUnits').addEventListener('input',refreshHour);
+document.getElementById('hourUpdateBtn').addEventListener('click',refreshHour);
+['daySchedule','dayCarry','dayProducedNow','lastHourActual'].forEach(id=>document.getElementById(id).addEventListener('input',()=>{if(!document.getElementById('tab-red').classList.contains('hidden'))refreshRed()}));
+document.getElementById('redUpdateBtn').addEventListener('click',refreshRed);
+document.querySelectorAll('.play').forEach(btn=>btn.addEventListener('click',()=>{const p=btn.getAttribute('data-play');if(state.plays.has(p)){state.plays.delete(p);btn.classList.remove('orange');btn.classList.add('secondary')}else{state.plays.add(p);btn.classList.remove('secondary');btn.classList.add('orange')}document.getElementById('playSelected').textContent=(state.lang==='en')?`Selected: ${Array.from(state.plays).join(', ')||'—'}`:`Seleccionado: ${Array.from(state.plays).join(', ')||'—'}`;if(!document.getElementById('tab-red').classList.contains('hidden'))refreshRed()}));
+document.getElementById('playDetail').addEventListener('input',()=>{if(!document.getElementById('tab-red').classList.contains('hidden'))refreshRed()});
+document.getElementById('copyTeamsBtn').addEventListener('click',async()=>{const text=document.getElementById('teamsPreview').textContent;try{await navigator.clipboard.writeText(text);const btn=document.getElementById('copyTeamsBtn');const old=btn.textContent;btn.textContent=(state.lang==='en')?'Copied ✓':'Copiado ✓';setTimeout(()=>btn.textContent=old,1200)}catch(e){alert((state.lang==='en')?'Copy failed. Select text and copy manually.':'No se pudo copiar. Selecciona el texto y copia manualmente.')}})
+document.getElementById('buildPlanBtn').addEventListener('click',buildPlan);
+document.getElementById('printPlanBtn').addEventListener('click',()=>window.print());
+buildLineButtons();initTabs();setLang('en');tickClock();setInterval(tickClock,15000);
+</script>
+</body>
+</html>
